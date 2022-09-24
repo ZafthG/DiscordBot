@@ -35,7 +35,17 @@ namespace Physics
         /// <summary> Inicializa o programa em modo assíncrono. </summary>
         public static async Task Run()
         {
-            _ = Global.DataClient.Open();
+            //  Conecta o MySQL e o Discord.
+            Task data = Global.DataClient.Open();
+            Task bot = Global.Bot.Connect();
+            await bot; await data;
+
+            //  Eventos de load do MySQL.
+            Global.DataClient.LoadEvents += Database.Guild.LoadGuilds;
+            Global.DataClient.LoadEvents += Database.TextChannel.LoadChannels;
+            await Global.DataClient.LoadEvents();
+
+            await Task.Delay(-1);
         }
 
         #endregion

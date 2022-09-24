@@ -11,7 +11,10 @@ namespace Physics
     internal static class Global
     {
         /// <summary> Estrutura de serviço para a conexão ao MySQL. </summary>
-        public static Database.DataService DataClient = new Database.DataService();
+        public static Database.DataService DataClient = new ();
+
+        /// <summary> Estrutura do serviço de bot gerenciado pelo Discord. </summary>
+        public static DiscordService.Bot Bot = new ();
     }
 }
 //

@@ -6,22 +6,25 @@ using MySql.Data.MySqlClient;
 namespace Physics.Database
 {
     /// <summary>
+    /// Delegate
+    /// </summary>
+    /// <returns></returns>
+    public delegate Task LoadData();
+
+    /// <summary>
     /// Classe responsável pelo gerenciamento da conexão MySQL.
     /// </summary>
     internal class DataService
     {
-        //  > Construtores da classe.
-        #region Constructors
-
-        #endregion
         //  ----------------------------- Fim da região
         //  > Variáveis da classe.
         #region Variables
 
         /// <summary> Indica o tempo relativo ao qual a conexão está ausente. </summary>
         private TimeSpan timeFreeConnection = TimeSpan.Zero;
-
-        /// <summary>  </summary>
+        /// <summary> Informa se está ou não conectado. </summary>
+        private bool isConnected = false;
+        /// <summary> Conexão MySQL. </summary>
         private MySqlConnection connection = new ();
 
         #endregion
@@ -31,17 +34,20 @@ namespace Physics.Database
 
         /// <summary> Pega o tempo que a conexão MySQL está inativa. </summary>
         public TimeSpan GetTimeSleep { get { return timeFreeConnection; } }
+        /// <summary> Informa se está ou não conectado ao MySQL. </summary>
+        public bool IsConnected { get { return isConnected; } }
+        /// <summary> Conexão MySQL. </summary>
+        public MySqlConnection Connection { get { return connection; } }
 
         #endregion
         //  ----------------------------- Fim da região
-        //  > Funções de classe.
-        //  Elementos sem retorno.
-        #region Methods
-        //  ----------------------------- Sub-regiões
-        //  > Funções sem retorno assíncronas.
-        #region Async
 
-        /// <summary> Abre uma conexão MySQL. </summary>
+        /// <summary>  </summary>
+        public LoadData? LoadEvents = null;
+
+        /// <summary>
+        /// Abre uma conexão MySQL.
+        /// </summary>
         public async Task Open()
         {
             int tries = 0;
@@ -55,6 +61,13 @@ namespace Physics.Database
                     await connection.OpenAsync();
 
                     Utilits.Log.WriteLine("Conexão MySQL aberta com sucesso.", Utilits.ConsoleLog.MessageType.Database);
+
+                    timeFreeConnection = TimeSpan.Zero;
+                    isConnected = true;
+
+                    if (LoadEvents != null)
+                        await LoadEvents();
+
                     break;
                 }
                 catch (MySqlException e)
@@ -66,42 +79,42 @@ namespace Physics.Database
             }
         }
 
-        /// <summary> Fecha a conexão MySQL. </summary>
+        /// <summary>
+        /// Fecha a conexão MySQL.
+        /// </summary>
         public async Task Close ()
         {
             if (connection.State != System.Data.ConnectionState.Open)
                 return;
 
             await connection.CloseAsync();
+            timeFreeConnection = TimeSpan.MaxValue;
+            isConnected = false;
         }
 
-        #endregion
-        //  ----------------------------- Fim da sub-região
-        //  > Funções sem retorno síncronas.
-        #region Sync
+        /// <summary>
+        /// Desenvolve um laço infinito no qual a verifica a inatividade da conexão.
+        /// </summary>
+        public async Task UseVerify()
+        {
+            if (timeFreeConnection != TimeSpan.MaxValue)
+            {
+                DateTime Ago = DateTime.Now.ToUniversalTime();
+                while (Ago.Minute >= DateTime.Now.ToUniversalTime().Minute) ;
 
-        #endregion
-        //  ----------------------------- Fim da sub-região
-        #endregion
-        //  ----------------------------- Fim da região
-        //  > Funções de classe.
-        //  Elementos com retorno.
-        #region Functions
-        //  ----------------------------- Sub-regiões
-        //  > Funções sem retorno assíncronas.
-        #region Async
+                timeFreeConnection.Add(new TimeSpan(0, 0, 1));
 
+                if (timeFreeConnection.Ticks >= new TimeSpan(0, Settings.MySQL_Timeout, 0).Ticks)
+                    await Close();
 
+                _ = UseVerify();
+            }
+        }
 
-        #endregion
-        //  ----------------------------- Fim da sub-região
-        //  > Funções sem retorno síncronas.
-        #region Sync
-
-        #endregion
-        //  ----------------------------- Fim da sub-região
-        #endregion
-        //  ----------------------------- Fim da região
+        /// <summary>
+        /// Para evitar que a conexão seja fechada, ao chamar esse método ela é atualizada.
+        /// </summary>
+        public void UpdateConnection () { timeFreeConnection = TimeSpan.Zero; }
     }
 }
 //
