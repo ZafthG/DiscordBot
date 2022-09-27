@@ -20,20 +20,18 @@ namespace Physics.Database
         //  > Variáveis da classe.
         #region Variables
 
-        /// <summary> Indica o tempo relativo ao qual a conexão está ausente. </summary>
-        private TimeSpan timeFreeConnection = TimeSpan.Zero;
         /// <summary> Informa se está ou não conectado. </summary>
         private bool isConnected = false;
         /// <summary> Conexão MySQL. </summary>
         private MySqlConnection connection = new ();
+        /// <summary> Evento responsável por verificar o uso da conexão MySQL. </summary>
+        private Events.UseVerify? UseVerifyEvent = null;
 
         #endregion
         //  ----------------------------- Fim da região
         //  > Propriedades da classe.
         #region Proprieties
 
-        /// <summary> Pega o tempo que a conexão MySQL está inativa. </summary>
-        public TimeSpan GetTimeSleep { get { return timeFreeConnection; } }
         /// <summary> Informa se está ou não conectado ao MySQL. </summary>
         public bool IsConnected { get { return isConnected; } }
         /// <summary> Conexão MySQL. </summary>
@@ -62,11 +60,9 @@ namespace Physics.Database
 
                     Utilits.Log.WriteLine("Conexão MySQL aberta com sucesso.", Utilits.ConsoleLog.MessageType.Database);
 
-                    timeFreeConnection = TimeSpan.Zero;
                     isConnected = true;
-
-                    if (LoadEvents != null)
-                        await LoadEvents();
+                    if (LoadEvents != null) await LoadEvents();
+                    if (UseVerifyEvent == null) UseVerifyEvent = new ();
 
                     break;
                 }
@@ -88,33 +84,19 @@ namespace Physics.Database
                 return;
 
             await connection.CloseAsync();
-            timeFreeConnection = TimeSpan.MaxValue;
             isConnected = false;
-        }
 
-        /// <summary>
-        /// Desenvolve um laço infinito no qual a verifica a inatividade da conexão.
-        /// </summary>
-        public async Task UseVerify()
-        {
-            if (timeFreeConnection != TimeSpan.MaxValue)
-            {
-                DateTime Ago = DateTime.Now.ToUniversalTime();
-                while (Ago.Minute >= DateTime.Now.ToUniversalTime().Minute) ;
+            if (UseVerifyEvent == null)
+                return;
 
-                timeFreeConnection.Add(new TimeSpan(0, 0, 1));
-
-                if (timeFreeConnection.Ticks >= new TimeSpan(0, Settings.MySQL_Timeout, 0).Ticks)
-                    await Close();
-
-                _ = UseVerify();
-            }
+            UseVerifyEvent.Destroy();
+            UseVerifyEvent = null;
         }
 
         /// <summary>
         /// Para evitar que a conexão seja fechada, ao chamar esse método ela é atualizada.
         /// </summary>
-        public void UpdateConnection () { timeFreeConnection = TimeSpan.Zero; }
+        public void UpdateConnection () { if (UseVerifyEvent != null) UseVerifyEvent.ResetTimer(); }
     }
 }
 //

@@ -20,6 +20,10 @@
     <None Remove="Database\Guilds\" />
     <None Remove="DiscordService\Data\" />
     <None Remove="Database\TextChannels\" />
+    <None Remove="Utilits\Web\" />
+    <None Remove="Events\" />
+    <None Remove="Events\Timer\" />
+    <None Remove="Database\Events\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.8.1" />
@@ -36,5 +40,9 @@
     <Folder Include="Database\Guilds\" />
     <Folder Include="DiscordService\Data\" />
     <Folder Include="Database\TextChannels\" />
+    <Folder Include="Utilits\Web\" />
+    <Folder Include="Events\" />
+    <Folder Include="Events\Timer\" />
+    <Folder Include="Database\Events\" />
   </ItemGroup>
 </Project>

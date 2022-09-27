@@ -45,6 +45,9 @@ namespace Physics
             Global.DataClient.LoadEvents += Database.TextChannel.LoadChannels;
             await Global.DataClient.LoadEvents();
 
+            //  Executa os eventos temporais em tempo de execução.
+            _ = Global.Timer.Execute();
+
             await Task.Delay(-1);
         }
 
