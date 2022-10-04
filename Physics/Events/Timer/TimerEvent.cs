@@ -43,11 +43,16 @@ namespace Physics.Events
         /// </summary>
         public async Task AwaitEvent()
         {
+            Utilits.Log.Write($"Chamando evento de espera >> ", Utilits.ConsoleLog.MessageType.Debug);
             if (EventsToRun == null)
                 return;
-            TimeInterval.Add(new TimeSpan(0, 0, 1));
+
+            TimeInterval = new TimeSpan(TimeInterval.Hours, TimeInterval.Minutes, TimeInterval.Seconds + 1);
+            Utilits.Log.WriteLine($"Incrementado TimeSpan ({TimeInterval.TotalSeconds} / {IntervalToExecute})", Utilits.ConsoleLog.MessageType.Debug);
+
             if (TimeInterval.TotalSeconds >= IntervalToExecute)
             {
+                Utilits.Log.WriteLine($"Executando evento.", Utilits.ConsoleLog.MessageType.Debug);
                 await EventsToRun();
                 TimeInterval = TimeSpan.Zero;
             }

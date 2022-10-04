@@ -32,6 +32,9 @@ namespace Physics.Events
                 if (ticks >= new TimeSpan(0, 0, 1).Ticks) break;
             }
 
+            Console.Title = $"Bot Server [{DateTime.Now.ToUniversalTime().ToString("yyyy/MM/dd HH:mm:ss")}]";
+            Utilits.Log.WriteLine($"Refresh: {DateTime.Now.ToUniversalTime().ToString("yyyy/MM/dd HH:mm:ss")}", Utilits.ConsoleLog.MessageType.Debug);
+
             if (TimerEvents != null)
                 await TimerEvents();
 

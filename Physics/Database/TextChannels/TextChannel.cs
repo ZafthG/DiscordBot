@@ -64,21 +64,22 @@ namespace Physics.Database
         /// <summary>
         /// Carrega is servidores registrados no banco de dados.
         /// </summary>
-        public static Task LoadChannels()
+        public static Task LoadFromDB()
         {
+
             foreach (Guild guild in Global.Bot.Guilds.Values)
             {
-                if (!Global.DataClient.IsConnected)
-                {
-                    _ = Global.DataClient.Open();
-                    return Task.CompletedTask;
-                }
+                DataService data = new();
 
-                string commandString = $"select id, tag from text_channels where guild_id = '{guild.Id}'";
-                MySqlCommand command = new MySqlCommand(commandString, Global.DataClient.Connection);
+
 
                 try
                 {
+                    data.Open().Wait();
+
+                    string commandString = $"select id, tag from text_channels where guild_id = '{guild.Id}'";
+                    MySqlCommand command = new MySqlCommand(commandString, data.Connection);
+
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -97,7 +98,7 @@ namespace Physics.Database
                 }
                 finally
                 {
-                    Global.DataClient.UpdateConnection();
+                    _ = data.Close();
                 }
             }
 

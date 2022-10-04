@@ -35,20 +35,27 @@ namespace Physics
         /// <summary> Inicializa o programa em modo assíncrono. </summary>
         public static async Task Run()
         {
-            //  Conecta o MySQL e o Discord.
-            Task data = Global.DataClient.Open();
-            Task bot = Global.Bot.Connect();
-            await bot; await data;
+            try
+            {
+                //  Conecta o MySQL e o Discord.
+                Task bot = Global.Bot.Connect();
+                await bot;
 
-            //  Eventos de load do MySQL.
-            Global.DataClient.LoadEvents += Database.Guild.LoadGuilds;
-            Global.DataClient.LoadEvents += Database.TextChannel.LoadChannels;
-            await Global.DataClient.LoadEvents();
+                //  Eventos de load do MySQL.
+                Database.DataService.LoadEvents += Database.Guild.LoadFromDB;
+                Database.DataService.LoadEvents += Database.TextChannel.LoadFromDB;
+                Database.DataService.LoadEvents += Database.RU.LoadFromDB;
+                await Database.DataService.LoadEvents();
 
-            //  Executa os eventos temporais em tempo de execução.
-            _ = Global.Timer.Execute();
+                //  Executa os eventos temporais em tempo de execução.
+                _ = Global.Timer.Execute();
 
-            await Task.Delay(-1);
+                await Task.Delay(-1);
+            }
+            catch (Exception e)
+            {
+                Utilits.Log.WriteLine($"Falha global:\n\tHResult: {e.HResult},\n\tMessage: {e.Message},\n\tLink: {e.HelpLink}.", Utilits.ConsoleLog.MessageType.Error);
+            }
         }
 
         #endregion

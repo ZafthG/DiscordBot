@@ -17,7 +17,8 @@ namespace Physics.Utilits.ConsoleLog
         Database,
         Waring,
         Error,
-        Default
+        Default,
+        Debug
     }
 }
 //

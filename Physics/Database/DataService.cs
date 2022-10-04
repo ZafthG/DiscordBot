@@ -20,28 +20,22 @@ namespace Physics.Database
         //  > Variáveis da classe.
         #region Variables
 
-        /// <summary> Informa se está ou não conectado. </summary>
-        private bool isConnected = false;
         /// <summary> Conexão MySQL. </summary>
         private MySqlConnection connection = new ();
-        /// <summary> Evento responsável por verificar o uso da conexão MySQL. </summary>
-        private Events.UseVerify? UseVerifyEvent = null;
 
         #endregion
         //  ----------------------------- Fim da região
         //  > Propriedades da classe.
         #region Proprieties
 
-        /// <summary> Informa se está ou não conectado ao MySQL. </summary>
-        public bool IsConnected { get { return isConnected; } }
         /// <summary> Conexão MySQL. </summary>
         public MySqlConnection Connection { get { return connection; } }
 
         #endregion
         //  ----------------------------- Fim da região
 
-        /// <summary>  </summary>
-        public LoadData? LoadEvents = null;
+        /// <summary> Eventos que devem ser carregados. </summary>
+        public static LoadData? LoadEvents = null;
 
         /// <summary>
         /// Abre uma conexão MySQL.
@@ -58,11 +52,7 @@ namespace Physics.Database
                     connection = new MySqlConnection(connectString);
                     await connection.OpenAsync();
 
-                    Utilits.Log.WriteLine("Conexão MySQL aberta com sucesso.", Utilits.ConsoleLog.MessageType.Database);
-
-                    isConnected = true;
-                    if (LoadEvents != null) await LoadEvents();
-                    if (UseVerifyEvent == null) UseVerifyEvent = new ();
+                    Utilits.Log.WriteLine("Conexão MySQL aberta com sucesso.", Utilits.ConsoleLog.MessageType.Debug);
 
                     break;
                 }
@@ -70,7 +60,7 @@ namespace Physics.Database
                 {
                     tries++;
 
-                    Utilits.Log.WriteLine($"Falha ao tentar abrir a conexão MySQL: {e.Message}", Utilits.ConsoleLog.MessageType.Error);
+                    Utilits.Log.WriteLine($"Falha ao tentar abrir a conexão MySQL:\n\t{e.Message}", Utilits.ConsoleLog.MessageType.Error);
                 }
             }
         }
@@ -84,19 +74,7 @@ namespace Physics.Database
                 return;
 
             await connection.CloseAsync();
-            isConnected = false;
-
-            if (UseVerifyEvent == null)
-                return;
-
-            UseVerifyEvent.Destroy();
-            UseVerifyEvent = null;
         }
-
-        /// <summary>
-        /// Para evitar que a conexão seja fechada, ao chamar esse método ela é atualizada.
-        /// </summary>
-        public void UpdateConnection () { if (UseVerifyEvent != null) UseVerifyEvent.ResetTimer(); }
     }
 }
 //

@@ -23,7 +23,10 @@
     <None Remove="Utilits\Web\" />
     <None Remove="Events\" />
     <None Remove="Events\Timer\" />
-    <None Remove="Database\Events\" />
+    <None Remove="Database\RU\" />
+    <None Remove="DiscordService\Actions\" />
+    <None Remove="Database\Menu\" />
+    <None Remove="Database\Food\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.8.1" />
@@ -43,6 +46,9 @@
     <Folder Include="Utilits\Web\" />
     <Folder Include="Events\" />
     <Folder Include="Events\Timer\" />
-    <Folder Include="Database\Events\" />
+    <Folder Include="Database\RU\" />
+    <Folder Include="DiscordService\Actions\" />
+    <Folder Include="Database\Menu\" />
+    <Folder Include="Database\Food\" />
   </ItemGroup>
 </Project>

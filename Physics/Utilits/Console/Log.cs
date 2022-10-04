@@ -51,6 +51,9 @@ namespace Physics.Utilits
         /// <param name="type">  </param>
         public static void Write(string message, ConsoleLog.MessageType type)
         {
+            if (type == ConsoleLog.MessageType.Debug && !Settings.Debug)
+                return;
+
             Console.ForegroundColor = GetColor(type);
             Console.Write($"[{DateTime.Now.ToUniversalTime().AddHours(-3).ToString("yyyy/MM/dd HH:mm:ss ffff f")}][{type.ToString().ToUpper()}] {message}");
             Console.ForegroundColor = GetColor(ConsoleLog.MessageType.Default);
@@ -89,6 +92,7 @@ namespace Physics.Utilits
                 case ConsoleLog.MessageType.Database: return ConsoleColor.Cyan;
                 case ConsoleLog.MessageType.Waring: return ConsoleColor.Yellow;
                 case ConsoleLog.MessageType.Error: return ConsoleColor.Red;
+                case ConsoleLog.MessageType.Debug: return ConsoleColor.Gray;
                 default: return ConsoleColor.White;
             }
         }
