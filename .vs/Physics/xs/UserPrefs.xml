@@ -1,0 +1,59 @@
+﻿<Properties StartupConfiguration="{4E7FCB06-3CC8-4E95-8B34-C09DD972EF71}|Default">
+  <MonoDevelop.Ide.ItemProperties.Physics PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Physics/Settings.cs">
+    <Files>
+      <File FileName="Physics/Base.cs" Line="11" Column="24" IsPinned="True" />
+      <File FileName="Physics/Database/Guilds/Guild.cs" Line="63" Column="58" />
+      <File FileName="Physics/Program.cs" Line="11" Column="34" />
+      <File FileName="Physics/Database/Food/Food.cs" Line="51" Column="38" />
+      <File FileName="Physics/Database/Menu/Menu.cs" Line="228" Column="41" />
+      <File FileName="Physics/Database/Food/FoodComponents.cs" Line="29" Column="38" />
+      <File FileName="Physics/Database/RU/RU.cs" Line="81" Column="30" />
+      <File FileName="Physics/Database/TextChannels/TextChannel.cs" Line="70" Column="65" />
+      <File FileName="Physics/Database/DataService.cs" Line="77" Column="10" />
+      <File FileName="Physics/Global.cs" Line="15" Column="1" />
+      <File FileName="Physics/DiscordService/Actions/RU/Update.cs" Line="33" Column="23" />
+      <File FileName="Physics/DiscordService/Bot.cs" Line="1" Column="1" />
+      <File FileName="Physics/Settings.cs" Line="41" Column="22" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Physics" expanded="True" selected="True">
+            <Node name="Physics" expanded="True">
+              <Node name="Database" expanded="True">
+                <Node name="Food" expanded="True" />
+                <Node name="Guilds" expanded="True" />
+                <Node name="Menu" expanded="True" />
+                <Node name="RU" expanded="True" />
+                <Node name="TextChannels" expanded="True" />
+              </Node>
+              <Node name="DiscordService" expanded="True">
+                <Node name="Actions" expanded="True">
+                  <Node name="RU" expanded="True" />
+                </Node>
+                <Node name="Events" expanded="True" />
+              </Node>
+              <Node name="Events" expanded="True">
+                <Node name="Timer" expanded="True" />
+              </Node>
+              <Node name="Utilits" expanded="True">
+                <Node name="Console" expanded="True" />
+                <Node name="Web" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+</Properties>
