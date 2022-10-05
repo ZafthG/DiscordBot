@@ -12,3 +12,4 @@ Physics/bin/**
 Physics/obj/**
 .vs/Physics/xs/UserPrefs.xml
 .vs/Physics/xs/project-cache/Physics-Debug.json
+Physics/Settings.cs
