@@ -10,19 +10,23 @@ namespace Physics.Database.Enum
     /// </summary>
     internal enum FoodComponents : int
     {
-        MainCourse,
-        Garnish,
-        Sauce,
-        Vegan,
-        Salad,
-        Dessert,
-        HasMilk,
-        HaveAllergicProducts,
-        HaveGluten,
-        AnimalOrigin,
-        HaveEggs,
-        HaveHoney,
-        HavePepper
+        //  Tipo de prato
+        MainCourse,             // 0
+        Garnish,                // 1
+        Salad,                  // 2
+        Dessert,                // 3
+
+        //  Vegano
+        Vegan,                  // 4
+
+        //  Componentes da comida.
+        HasMilk,                // 5
+        HaveAllergicProducts,   // 6
+        HaveGluten,             // 7
+        AnimalOrigin,           // 8
+        HaveEggs,               // 9
+        HaveHoney,              // 10
+        HavePepper              // 11
     }
 }
 //

@@ -36,7 +36,7 @@ namespace Physics
         public static async Task Run()
         {
             try
-            {
+            {                
                 //  Conecta o MySQL e o Discord.
                 Task bot = Global.Bot.Connect();
                 await bot;

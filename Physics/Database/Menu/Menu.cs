@@ -3,6 +3,8 @@
 //
 //      Por Gabriel Ferreira (ZafthG)
 //
+using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
 using HtmlAgilityPack;
@@ -95,6 +97,7 @@ namespace Physics.Database
                 content = Regex.Replace(content, @"<a([^>]*)>", "");
                 content = Regex.Replace(content, @"<\/a([^>]*)>", "");
                 content = Regex.Replace(content, @"<br>", "\n");
+                content = content.Replace("c/", "com");
 
                 string[] foods = content.Split('\n');
                 if (cleanText == "CAFE_DA_MANHA")
@@ -170,6 +173,110 @@ namespace Physics.Database
             }
 
             return Task.FromResult(-1);
+        }
+
+        /// <summary>
+        /// Obtem o menu em formato de impressão.
+        /// </summary>
+        public override string ToString()
+        {
+            StringBuilder result = new ();
+            CultureInfo pt_br = new CultureInfo("pt-BR");
+
+            result.Append($"Bom dia para todos! O cardápio de hoje (**{DateTime.Now.ToString("dd/MM/yyyy - dddd", pt_br).ToUpper()}**) é:\n");
+            result.Append("\n**CAFÉ DA MANHÃ**\n");
+            result.Append(Print(breakfast));
+            result.Append("\n**ALMOÇO**\n");
+            result.Append(Print(lunch));
+            result.Append("\n**JANTAR**\n");
+            result.Append(Print(dinner));
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Prepara a impressão do cardápio de maneira definitiva.
+        /// </summary>
+        /// <param name="list">Lista para se basear.</param>
+        /// <returns>Retorna o texto organizado.</returns>
+        private string Print (List<Food> list)
+        {
+            StringBuilder result = new ();
+            StringBuilder sectionMain = new ();
+            StringBuilder? sectionDessert = null;
+            StringBuilder? sectionVegan = null;
+            foreach (Food food in list)
+            {
+                //  Se uma das comidas não tiver sido configurada no banco de dados, faz a impressão simples.
+                if (food.Components == null)
+                    return PrintStandard(list);
+
+                StringBuilder maker = new ();
+                maker.Append($"- {food.Name}");
+
+                if (food.Components.Contains(Enum.FoodComponents.Vegan))
+                    maker.Append(" 🍃");
+                if (food.Components.Contains(Enum.FoodComponents.HasMilk))
+                    maker.Append(" 🥛");
+                if (food.Components.Contains(Enum.FoodComponents.HaveAllergicProducts))
+                    maker.Append(" ☠️");
+                if (food.Components.Contains(Enum.FoodComponents.HaveGluten))
+                    maker.Append(" 🍞");
+                if (food.Components.Contains(Enum.FoodComponents.HaveEggs))
+                    maker.Append(" 🥚");
+                if (food.Components.Contains(Enum.FoodComponents.AnimalOrigin))
+                    maker.Append(" 🍖");
+                if (food.Components.Contains(Enum.FoodComponents.HaveHoney))
+                    maker.Append(" 🍯");
+                if (food.Components.Contains(Enum.FoodComponents.HavePepper))
+                    maker.Append(" 🌶");
+
+                if (food.Components.Contains(Enum.FoodComponents.MainCourse) && !food.Components.Contains(Enum.FoodComponents.Vegan))
+                    sectionMain.Append($"\t{maker}\n");
+                else if (food.Components.Contains(Enum.FoodComponents.MainCourse) && food.Components.Contains(Enum.FoodComponents.Vegan))
+                {
+                    if (sectionVegan == null)
+                        sectionVegan = new ();
+                    sectionVegan.Append($"\t\t{maker}\n");
+                }
+                else if (food.Components.Contains(Enum.FoodComponents.Garnish))
+                    sectionMain.Append($"\t{maker}\n");
+                else if (food.Components.Contains(Enum.FoodComponents.Salad))
+                    sectionMain.Append($"\t{maker}\n");
+                else if (food.Components.Contains(Enum.FoodComponents.Dessert))
+                {
+                    if (sectionDessert == null)
+                        sectionDessert = new();
+                    sectionDessert.Append($"\t\t{maker}\n");
+                }
+            }
+
+            result.Append(sectionMain);
+            if (sectionVegan != null)
+            {
+                result.Append("\n\t**Opção vegana:**\n");
+                result.Append(sectionVegan);
+            }
+            if (sectionDessert != null)
+            {
+                result.Append("\n\t**Sobremesa:**\n");
+                result.Append(sectionDessert);
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Prepara a impressão do cardápio de maneira simples e padrão para caso um dos elementos não tenha sido corretamente configurado.
+        /// </summary>
+        /// <param name="list">Lista de elementos para se basear.</param>
+        /// <returns>Retorna o texto organizado.</returns>
+        private string PrintStandard (List<Food> list)
+        {
+            StringBuilder result = new();
+            foreach (Food food in list)
+                result.Append($"\t - {food.Name}\n");
+            return result.ToString();
         }
     }
 }

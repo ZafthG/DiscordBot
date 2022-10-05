@@ -3,6 +3,8 @@
 //
 //      Por Gabriel Ferreira (ZafthG)
 //
+using System.Text;
+using System.Security.Cryptography;
 using Discord.WebSocket;
 using Discord.Rest;
 using MySql.Data.MySqlClient;
@@ -58,6 +60,9 @@ namespace Physics.Database
         public async Task<RestUserMessage> Send (string message)
         {
             ISocketMessageChannel textChannel = (ISocketMessageChannel) channel;
+            MD5 hash = MD5.Create();
+
+            Utilits.Log.WriteLine($"Enviando mensagem para [id: {id}, guild_id: {guild_id}, tag: {tag}]: {Convert.ToBase64String(hash.ComputeHash(Encoding.Unicode.GetBytes(message)))}", Utilits.ConsoleLog.MessageType.Bot);
             return await textChannel.SendMessageAsync(message);
         }
 

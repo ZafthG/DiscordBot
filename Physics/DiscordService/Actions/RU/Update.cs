@@ -35,7 +35,13 @@ namespace Physics.DiscordService.Actions
         {
             Utilits.Log.WriteLine("Atualizando cardápio dos restaurantes universitários . . .", Utilits.ConsoleLog.MessageType.System);
             foreach (Database.RU ru in Elements)
+            {
                 await ru.LoadMenuFromWeb();
+                Utilits.Log.WriteLine($"Enviando novo cardápio de {ru.Name} para os canais receptores.", Utilits.ConsoleLog.MessageType.Debug);
+                if (ru.GetMenuPrint == null)
+                    continue;
+                await Global.Bot.TextChannels[$"TEST_TCH"].Send($"**{ru.Name.ToUpper()}**\n\n{ru.GetMenuPrint}");
+            }
 
             if (DateTime.Now.ToUniversalTime().AddHours(-3).AddDays(1).Year == DateTime.Now.ToUniversalTime().AddHours(-3).Year)
                 nextUpdate = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.ToUniversalTime().AddHours(-3).AddDays(1).Day, Settings.Alert_StandardHour, 0, 0);

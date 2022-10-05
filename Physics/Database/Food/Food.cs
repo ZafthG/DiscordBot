@@ -72,6 +72,8 @@ namespace Physics.Database
         //  > Propriedades da classe.
         #region Proprieties
 
+        /// <summary> Adquire o ID da respectiva comida no banco de dados.</summary>
+        public ulong Id { get { return id; } }
         /// <summary> Adquire o nome da comida. </summary>
         public string Name { get { return nametext == null ? name : nametext; } }
         /// <summary> Adquire o conjunto de componentes de descrição e categorização da comida. </summary>

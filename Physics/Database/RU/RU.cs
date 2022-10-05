@@ -56,6 +56,11 @@ namespace Physics.Database
         //  > Propriedades da classe.
         #region Proprieties
 
+        /// <summary> Adquire o nome de exibição do RU. </summary>
+        public string Name { get { return textname; } }
+        /// <summary> [Versão provisória para um único menu] Pega o menu para impressão. </summary>
+        public string? GetMenuPrint { get { return menus == null ? null : menus.ToArray()[0].ToString(); } }
+
         #endregion
         //  ----------------------------- Fim da região
 
@@ -73,6 +78,7 @@ namespace Physics.Database
             }
             catch (Exception e)
             {
+                menus = null;
                 if (e.Message.Contains("ERR#00h"))
                 {
                     Utilits.Log.WriteLine($"Falha ao carregar um cardápio para [tag: {tag}, url: {url}]: Nenhum cardápio pode ser localizado para a data de hoje. Tentando novamente em cerca de 1 hora.", Utilits.ConsoleLog.MessageType.Waring);
