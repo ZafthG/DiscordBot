@@ -14,3 +14,4 @@ Physics/obj/**
 .vs/Physics/xs/project-cache/Physics-Debug.json
 Physics/Settings.cs
 *.pubxml
+Physics/Settings.cs
